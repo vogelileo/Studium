@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="hanoifrontend:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/hanoifrontend_jar</output-path>
+    <root id="archive" name="hanoifrontend.jar">
+      <element id="module-output" name="hanoifrontend" />
+      <element id="module-output" name="hanoibackend" />
+    </root>
+  </artifact>
+</component>

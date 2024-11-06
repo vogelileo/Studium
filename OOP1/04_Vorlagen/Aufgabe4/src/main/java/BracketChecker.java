@@ -7,7 +7,7 @@ public class BracketChecker {
     public boolean validate (String s){
         this.input = s;
         this.inputArr = s.toCharArray();
-
+        int indexFound = -1;
         for(int i = 0; i< this.inputArr.length;i++){
             char search = '!';
             if(this.inputArr[i] == '('){
@@ -26,13 +26,25 @@ public class BracketChecker {
             if(search == '!'){
                 return true;
             }
-            boolean found = false;
-            for(int k = i; k < this.inputArr.length; i++){
+            for(int k = i; k < this.inputArr.length; k++){
                 if(search == this.inputArr[k]){
-                    found = true;
+                    indexFound = k;
                 }
             }
+
+            //check if string between
+            //recurse with string between
         }
+        if(indexFound < 0 ){
+            return false;
+        }
+
+        if(indexFound == 1){
+            return true;
+        }
+
+        return this.validate(String.valueOf(Arrays.copyOfRange(this.inputArr, 1, indexFound -1)));
+
     }
 
     public char[] getInputArr(){
