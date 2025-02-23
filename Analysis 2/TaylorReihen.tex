@@ -1,0 +1,45 @@
+\documentclass{article}
+\usepackage{amsmath}
+\title{Taylor Reihen}
+\author{Leo Vogel}
+\begin{document}
+\maketitle
+\section*{Taylor Reihen}
+\underline{Motivierendes Beispiel:} Berechne \(\ln(2)\) möglichst genau
+\newline
+Skizze:
+
+Gemäss Skizze \(t(2) \approx \ln(2)\)
+
+\underline{Formel für die Tangente:} \(f(x) = \ln(x)\)
+\[
+\begin{cases}
+    t(x_0) = f(x_0) \\
+    t'(x_0) = f'(x_0)
+\end{cases}
+\]
+
+\(
+\Rightarrow t(x) = f''(x)(x - x_0) + f(x_0)
+\)
+
+\underline{Approximation von \(\ln(2)\)} \(x_0 = 1\) 
+
+\(f(x)=\ln(x)\); \(f(x_0)=\ln(x_0)=\ln(1)=0\)
+
+\(f'(x) = \frac{1}{x}\); \(f'(x_0)=\frac{1}{x_0}=\frac{1}{1}=1\)
+
+\(
+t(x) = 1 \cdot (x-1)+0=x-1
+\)
+
+\(
+\ln(2) \approx t(2) = 2-1=1
+\)
+\(
+\ln(2) \approx (1) 
+\) 
+ 
+
+
+\end{document}

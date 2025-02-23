@@ -1,7 +1,10 @@
+import java.util.HashMap;
+import java.util.List;
 import java.util.stream.IntStream;
 
 public class PrimGenerator {
     public static void main(String[] args) {
+        
         int LIMIT = 1000000;
         long startTime1 = System.nanoTime();
         IntStream.iterate(0, i->i+1)
