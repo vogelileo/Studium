@@ -1,0 +1,36 @@
+### GET index.html
+GET localhost:8080/
+
+> {%
+    client.test("Check mimeType on /", function () {
+        client.assert(response.contentType.mimeType === "text/html", "Response Body is correct");
+    });
+%}
+
+### GET index.html
+GET localhost:8080/
+
+> {%
+    client.test("Request executed successfully", function () {
+        let start = "<!DOCTYPE html>";
+        client.assert(response.body.slice(0, start.length) === start, "Response Body is correct");
+    });
+%}
+
+### GET user
+GET localhost:8080/user
+
+> {%
+    client.test("Check mimeType on /", function () {
+        client.assert(response.contentType.mimeType === "application/json", "Response Body is correct");
+    });
+%}
+
+### GET user
+GET localhost:8080/user
+
+> {%
+    client.test("Request executed successfully", function () {
+        client.assert(response.body["firstName"] === "Frank", "Response Body is correct");
+    });
+%}
