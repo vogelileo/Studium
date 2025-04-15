@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="exercise08_template3" />
+        <module name="exercise8_solution4" />
+        <module name="exercise08_template4" />
+        <module name="exercise08_template1" />
+        <module name="exercise08_template2" />
+        <module name="exercise8_solution1" />
+        <module name="exercise8_solution2" />
+        <module name="exercise8_solution3" />
+      </profile>
+    </annotationProcessing>
+  </component>
+</project>
