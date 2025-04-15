@@ -25,9 +25,9 @@ e_7_1 f p xs = map f (filter p xs)
 --     all :: (a -> Bool) -> [a] -> Bool
 
 myAll :: (a -> Bool) -> [a] -> Bool
-myAll p (x : xs) = p x && (myAll p xs)
+myAll p = foldr ((&&) . p) True
 
-myAllHigh p = foldr (\x n -> p x && n) True
+-- TODO done
 
 -- >>> myAllHigh (<5) [1,2,3,4,5]
 -- False
@@ -37,6 +37,7 @@ myAllHigh p = foldr (\x n -> p x && n) True
 myAny :: (a -> Bool) -> [a] -> Bool
 myAny p (x : xs) = p x || (myAll p xs)
 
+myAnyHigh :: (Foldable t1) => (t2 -> Bool) -> t1 t2 -> Bool
 myAnyHigh p = foldr (\x n -> p x || n) False
 
 -- (c) Select elements from a list while they satisfy a predicate:
@@ -69,6 +70,7 @@ For dropWhile, this is even more challenging. Thus, define it using recursion (a
 --    | p x = []:myDropWhile p xs
 --    | otherwise (x:xs)
 
+myDropWhileHigh :: (Foldable t) => (a -> Bool) -> t a -> [a]
 myDropWhileHigh p = foldr (\x n -> if p x then n else x : n) []
 
 -- >>> myDropWhileHigh (<3) [1,2,3,4,1]
@@ -103,7 +105,7 @@ myMap f = foldr (\x n -> f x : n) []
 
 myFilter :: (a -> Bool) -> [a] -> [a]
 -- myFilter f = foldr ??? ???
-myFilter f = foldr (\x n -> if f x then x : n else n) []
+myFilter f = foldr (\x acc -> if f x then x : acc else acc) []
 
 -- >>> myFilter (<4) [1,6,3,4,5]
 -- [1,3]
