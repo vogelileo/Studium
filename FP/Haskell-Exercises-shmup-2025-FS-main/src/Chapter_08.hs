@@ -53,6 +53,7 @@ eval = folde id (+)
 --- >>>eval (Add (Val 1) (Add (Val 4) (Val 6)))
 -- 11
 
+-- we want to replace all Val node regardless of what it has as an value with 1
 size :: Expr -> Int
 size = folde (const 1) (+)
 
@@ -82,6 +83,7 @@ instance Eq Expr where
 data List a = Nil | Cons a (List a)
   deriving (Show)
 
+-- For every element a that is comparable, we can also compare a List of elements of that type
 instance (Eq a) => Eq (List a) where
   (==) :: (Eq a) => List a -> List a -> Bool
   (==) Nil Nil = True

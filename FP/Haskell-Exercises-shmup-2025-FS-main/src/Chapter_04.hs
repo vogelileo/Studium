@@ -14,7 +14,7 @@ module Chapter_04 where
 
 safeTailA :: [a] -> [a]
 -- safeTailA xs = if null then [] else xs
-safeTailA xs = if null xs then [] else xs
+safeTailA xs = if null xs then [] else tail xs
 
 safeTailB :: [a] -> [a]
 -- safeTailB xs | null = []

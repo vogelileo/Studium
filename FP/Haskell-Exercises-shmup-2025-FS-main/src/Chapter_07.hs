@@ -27,15 +27,14 @@ e_7_1 f p xs = map f (filter p xs)
 myAll :: (a -> Bool) -> [a] -> Bool
 myAll p = foldr ((&&) . p) True
 
--- TODO done
-
 -- >>> myAllHigh (<5) [1,2,3,4,5]
 -- False
 
 --     :: (a0_aUBR[tau:1] -> Bool) -> [a1_aUBT[tau:1]] -> t_aUBE[sk:1]
 
 myAny :: (a -> Bool) -> [a] -> Bool
-myAny p (x : xs) = p x || (myAll p xs)
+myAny _ [] = False
+myAny p (x : xs) = p x || myAny p xs
 
 myAnyHigh :: (Foldable t1) => (t2 -> Bool) -> t1 t2 -> Bool
 myAnyHigh p = foldr (\x n -> p x || n) False
@@ -46,6 +45,7 @@ myAnyHigh p = foldr (\x n -> p x || n) False
 -- Hint: Try to first define `takeWhile` using recursion before attempting a definiton using `foldr`.
 
 myTakeWhile :: (a -> Bool) -> [a] -> [a]
+myTakeWhile _ [] = []
 myTakeWhile p (x : xs)
   | p x = x : myTakeWhile p xs
   | otherwise = []
@@ -93,6 +93,8 @@ myDropWhile p xs = foldr (\x rs -> if p x then tail rs else xs) xs xs
 
 -}
 
+myDropWhile p xs = foldr (\x rs -> if p x then tail rs else xs) xs xs
+
 -- Exercise 7.3 (**)
 -- Redefine the functions map and filter using foldr.
 
@@ -110,8 +112,12 @@ myFilter f = foldr (\x acc -> if f x then x : acc else acc) []
 -- >>> myFilter (<4) [1,6,3,4,5]
 -- [1,3]
 
--- -- myCurry :: ???
--- myCurry f = foldr(\x n -> f x:n)[]
+-- Exercise 7.5 (**)
+-- Without looking at the definitions from the standard prelude, define the higher-order library function `curry` that converts a function on pairs into a curried function, and, conversely, the function `uncurry` that converts a curried function with two arguments into a function on pairs.
+-- Hint: first write down the types of the two functions.
 
--- -- myUncurry :: ???
--- myUncurry f = undefined
+-- myCurry :: ((x, y) -> z) -> x -> y -> z
+myCurry f x y = f (x, y)
+
+-- myUncurry :: (x -> y -> z) -> (x, y) -> z
+myUncurry f (a, b) = f a b
