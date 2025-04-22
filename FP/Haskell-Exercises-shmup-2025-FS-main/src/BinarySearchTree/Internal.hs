@@ -28,7 +28,6 @@ module BinarySearchTree.Internal where
 Note that this module contains the internal representation of the BST data structure, hence its name `BinarySearchTree.Internal`. By convention, the entire contents of `BinarySearchTree.Internal` may be imported for testing, but it is only intended to be used via its public interface in the module `BinarySearchTree`.
 -}
 
-import qualified Data.List
 import Test.QuickCheck
 
 -- The underlying tree representation for BSTs
@@ -66,7 +65,11 @@ data T a = Leaf | Node (T a) a (T a)
 
 valid :: (Ord a) => T a -> Bool
 valid Leaf = True
-valid (Node ltt x gtt) = valid ltt && valid gtt
+valid (Node ltt x gtt) = valid ltt && valid gtt && allT (< x) ltt && allT (> x) gtt
+  where
+    allT :: (a -> Bool) -> T a -> Bool
+    allT _ Leaf = True
+    allT p (Node l y r) = p y && allT p l && allT p r
 
 -- Hint: Read `ltt` as "less than tree" and `gtt` as "greater than tree"
 -- TODO: check if ltt.x is smaller than x and gtt.x is greater than x
@@ -245,9 +248,7 @@ prop_member_delete x t = not (member x (delete x t))
 
 instance (Ord a) => Eq (T a) where
   (==) :: (Ord a) => T a -> T a -> Bool
-  (==) (Node ltt1 y1 gtt1) (Node ltt2 y2 gtt2) = ltt1 == ltt2 && y1 == y2 && gtt1 == gtt2
-  Leaf == Leaf = True
-  _ == _ = False
+  t1 == t2 = toList t1 == toList t2
 
 -- Exercise BST.9 (*)
 -- Make the type T a member of the type classes `Semigroup` and `Monoid`.
