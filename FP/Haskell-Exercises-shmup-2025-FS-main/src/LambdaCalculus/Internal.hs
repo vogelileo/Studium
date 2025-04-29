@@ -40,6 +40,7 @@ The command `chcp 65001` sets the codepage to UTF-8. For more information: https
 
 -- This module requires an implementation of sets. By default, it uses the implementation provided in the module `LambdaCalculus.UnorderedSet`. But you could replace it with your own implementation in the module `BinarySearchTree` by modifying file `src/LambdaCalculus/Set.hs`.
 
+import Control.Arrow (ArrowChoice (left))
 import qualified LambdaCalculus.Set as Set
 import Prettyprinter
 import Test.QuickCheck
@@ -348,7 +349,9 @@ prop_freeVars_nfin m = all (\x -> not (x `nfin` m)) (Set.toList (freeVars m))
 -- True
 
 freshId :: Set.T Id -> Id -> Id
-freshId s x = if x `Set.member` s then x ++ "'" else x
+freshId s = go
+  where
+    go y = if y `Set.member` s then go (y ++ "'") else y
 
 -- Exercise LC.2.5 (**)
 -- Complete the following definitions of the correctness properties of `freshId` and make sure their the property-based tests pass.
@@ -427,15 +430,21 @@ fromJust (Just x) = x
 
 applySubst :: Subst -> Term -> Term
 applySubst (x, l) (Var y)
-  | x == y = undefined
-  | otherwise = undefined -- case (x /= y)
+  | x == y = l
+  | otherwise = Var y
 applySubst (x, l) (Abs y m)
-  | x == y = undefined
-  | x /= y && y `nfin` l = undefined
-  | otherwise -- case (x /= y && y `Set.member` freeVars l)
-    =
-      undefined
-applySubst (x, l) (App m n) = undefined
+  | x == y = Abs y m
+  | x /= y && y `nfin` l = Abs y (applySubst (x, l) m)
+  | otherwise =
+      let freeVarsSet = Set.union (freeVars l) (freeVars m)
+          fresh = freshId freeVarsSet y
+       in Abs fresh (applySubst (x, l) (applySubst (y, Var fresh) m))
+applySubst (x, l) (App m n) = App (applySubst (x, l) m) (applySubst (x, l) n)
+
+-- >>> applySubst ("x", Var "y") (Abs "y" $ App (App (Var "x") (Var "y")) (Var "y'"))
+-- Abs "y''" (App (App (Var "y") (Var "y''")) (Var "y'"))
+
+-- Abs "y''" (App (App (Var "y") (Var "y''")) (Var "y'"))
 
 -- [x := y] λy.x y y' = λy''.y y'' y'
 -- >>> applySubst ("x", Var "y") (Abs "y" $ App (App (Var "x") (Var "y")) (Var "y'")) == Abs "y''" (App (App (Var "y") (Var "y''")) (Var "y'"))
@@ -444,9 +453,15 @@ applySubst (x, l) (App m n) = undefined
 renameBoundVar :: Term -> Id -> Maybe Term
 renameBoundVar (Abs x m) y =
   if y `nfin` m
-    then Just undefined
+    then Just (Abs y (applySubst (x, Var y) m))
     else Nothing
 renameBoundVar _ _ = Nothing
+
+-- >>> Just (Abs "y" (Var "y"))
+-- Just (Abs "y" (Var "y"))
+
+-- >>> renameBoundVar (Abs "x" (Var "x")) "y"
+-- Just (Abs "y" (Var "y"))
 
 -- Renaming a bound variable within a lambda abstraction with a fresh variable always succeeds.
 prop_renameBoundVar_freshId :: Term -> Bool
@@ -464,10 +479,10 @@ prop_renameBoundVar_freshId m = renameBoundVar (Abs "x" m) (freshId (Set.insert 
 -- Hint: When comparing two lambda abstractions with distinct bound variables, use `renameBoundVar` or `applySubst` to make these variables identical before continuing with the recursion.
 
 alphaEq :: Term -> Term -> Bool
-alphaEq (Var x) (Var y) = undefined
-alphaEq (App m1 n1) (App m2 n2) = undefined
-alphaEq (Abs x m) (Abs y n) = undefined
-alphaEq _ _ = undefined
+alphaEq (Var x) (Var y) = x == y
+alphaEq (App m1 n1) (App m2 n2) = alphaEq m1 m2 && alphaEq n1 n2
+alphaEq (Abs x m) (Abs y n) = alphaEq m (applySubst (y, Var x) n)
+alphaEq _ _ = False
 
 -- Renaming a bound variable with a fresh variable results in an alpha equivalent term.
 -- Convince yourself of the validity of the property below and verify that your implementations are correct by running the tests.
@@ -521,6 +536,9 @@ Now that we have completed all the low-level heavy lifting, we can get down to t
 -- >>> betaReduce tI == Nothing
 -- True
 
+-- >>> tI
+-- Abs "x" (Var "x")
+
 -- >>> betaReduce (App tI tI) == Just (tI)
 -- True
 
@@ -528,7 +546,7 @@ Now that we have completed all the low-level heavy lifting, we can get down to t
 -- True
 
 betaReduce :: Term -> Maybe Term
-betaReduce (App (Abs x m) n) = Just undefined
+betaReduce (App (Abs x m) n) = Just (applySubst (x, m) n)
 betaReduce _ = Nothing
 
 -- Exercise LC.4.2 (**)
@@ -546,6 +564,9 @@ betaReduce _ = Nothing
 -- >>> containsBetaRedex tI == False
 -- True
 
+-- >>> tI
+-- Abs "x" (Var "x")
+
 -- >>> containsBetaRedex (App tI tI) == True
 -- True
 
@@ -553,14 +574,19 @@ betaReduce _ = Nothing
 -- True
 
 containsBetaRedex :: Term -> Bool
-containsBetaRedex = undefined
+containsBetaRedex (Var _) = False
+containsBetaRedex (Abs _ m) = containsBetaRedex m
+containsBetaRedex (App m n) = isBetaRedex (App m n) || containsBetaRedex m || containsBetaRedex n
+  where
+    isBetaRedex (App (Abs _ _) _) = True
+    isBetaRedex _ = False
 
 -- Exercise LC.4.3 (*)
 -- The function `isInBetaNormalForm t` returns `True` if and only if the term `t` is in beta-normal form.
 -- Complete the definition of `isInBetaNormalForm` below, only using `containsBetaRedex`, `(.)`, and `not`.
 
 isInBetaNormalForm :: Term -> Bool
-isInBetaNormalForm = undefined
+isInBetaNormalForm = not . containsBetaRedex
 
 -- A reduction step can be thought of as a function from `Term` to `Maybe Term`, which returns `Nothing` if the reduction is not applicable, or `Just n` if `n` is the result of applying a single step of the reduction to the input term.
 type ReductionStep = Term -> Maybe Term
@@ -574,23 +600,27 @@ type ReductionStep = Term -> Maybe Term
 -- True
 
 -- >>> leftmostOutermostStep (App tI tI) == Just tI
--- True
+-- Prelude.undefined
 
 -- >>> leftmostOutermostStep (App tL tΩ) == Just (Abs "y" (Var "y"))
--- True
+-- Prelude.undefined
 
 -- >>> leftmostOutermostStep (App (App tL tΩ) tI) == Just (App (Abs "y" (Var "y")) (Abs "x" (Var "x")))
--- True
+-- Prelude.undefined
 
 leftmostOutermostStep :: ReductionStep
 -- remember `ReductionStep = Term -> Maybe Term`
 leftmostOutermostStep m = if containsBetaRedex m then Just (lo m) else Nothing
   where
-    lo (Var x) = undefined
-    lo (Abs x m) = undefined
-    lo (App m n) = undefined
+    lo (Var x) = Var x
+    lo (Abs x m) = Abs x (lo m)
+    lo (App (Abs x m) n) = applySubst (x, n) m
+    lo (App m n)
+      | containsBetaRedex m = App (lo m) n
+      | otherwise = App m (lo n)
 
--- Lets now try to see what reductions look like in pretty printed syntax.
+-- >>> leftmostOutermostStep (App tI tI)
+-- Just (Abs "x" (Var "x"))
 
 -- Note: The function `pretty`, when given an input of type `Maybe a`, just ignores `Nothing` and pretty prints the `x` in `Just x`. Source: https://hackage.haskell.org/package/prettyprinter-1.7.1/docs/Prettyprinter.html#v:pretty
 
@@ -612,7 +642,10 @@ leftmostOutermostStep m = if containsBetaRedex m then Just (lo m) else Nothing
 derivation :: ReductionStep -> Term -> [Term]
 -- remember `ReductionStep = Term -> Maybe Term`
 -- Note: `derivation` can also have the more general type `(t -> Maybe t) -> t -> [t]`
-derivation step m = undefined
+derivation step m =
+  m : case step m of
+    Nothing -> []
+    Just n -> derivation step n
 
 leftmostOutermostDerivation :: Term -> [Term]
 leftmostOutermostDerivation = derivation leftmostOutermostStep
@@ -659,6 +692,10 @@ prop_derivation_infinite n = take n (derivation leftmostOutermostStep tΩ) `alph
 -- prop> prop_derivation_infinite
 -- +++ OK, passed 100 tests.
 
+-- *** Failed! Exception: 'ProgressCancelledException' (after 2 tests):
+
+-- 1
+
 -- We can now define a function that computes the beta normal form of a given lambda term!
 
 -- Exercise LC.4.6 (*)
@@ -666,7 +703,7 @@ prop_derivation_infinite n = take n (derivation leftmostOutermostStep tΩ) `alph
 -- Complete the definition of `betaNormalForm` below, only using the functions `derivation`, `leftmostOutermostStep`, `.`, and `last :: [a] -> a`.
 
 betaNormalForm :: Term -> Term
-betaNormalForm = undefined
+betaNormalForm = last . derivation leftmostOutermostStep
 
 -- `(λx.x) a` reduces to `a`
 -- >>> betaNormalForm (App (Abs "x" (Var "x")) (Var "a")) == (Var "a")
