@@ -1,4 +1,5 @@
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
+
 {-# HLINT ignore "Use print" #-}
 {-# HLINT ignore "Use replicateM" #-}
 module Chapter_10 where
@@ -8,9 +9,13 @@ module Chapter_10 where
 -- > stack ghci src/Chapter_10.hs
 -- [1 of 1] Compiling Chapter_10       ( src/Chapter_10.hs, interpreted )
 -- Ok, one module loaded.
--- *Chapter_10> myPutStr "Hello\n"
+
+-- * Chapter_10> myPutStr "Hello\n"
+
 -- Hello
--- *Chapter_10> adder
+
+-- * Chapter_10> adder
+
 -- How many numbers? 5
 -- 1
 -- 2
@@ -19,7 +24,6 @@ module Chapter_10 where
 -- 5
 -- The total is 15
 
-
 -- Exercise 10.WarmUp1
 -- Define an action `strlen :: IO ()` that prompts the user to enter a string and then displays its length:
 --     > strlen
@@ -27,9 +31,13 @@ module Chapter_10 where
 --     The string has 7 characters
 
 strlen :: IO ()
-strlen = undefined 
-
-
+strlen = do
+  putStr "Enter a string: "
+  input <- getLine
+  let len = length input
+  putStr "The string has "
+  putStr (show len)
+  putStrLn " characters"
 
 -- Exercise 10.1 (**)
 -- Redefine `putStr :: String -> IO ()` using a list comprehension and the library function `sequence_ :: [IO a] -> IO ()`.
@@ -42,8 +50,7 @@ strlen = undefined
 -- Note: If you are trying this within ghc, please note that putStr is already defined in the Prelude. Use the name myPutStr which is currently undefined instead.
 
 myPutStr :: String -> IO ()
-myPutStr = undefined 
-
+myPutStr xs = sequence_ [putChar x | x <- xs]
 
 -- Exercise 10.4 (**)
 -- Define an action `adder :: IO ()` that reads a given number of integers from the keyboard, one per line, and displays their sum. For example:
@@ -64,15 +71,22 @@ myPutStr = undefined
 -- show :: Show a => a -> String
 
 adder :: IO ()
-adder = undefined
+adder = do
+  putStr "How many numbers? "
+  numInputStr <- getLine
+  let numInput = read numInputStr :: Int
+  adder' 0 numInput
+
 adder' :: Int -> Int -> IO ()
-adder' = undefined
-
-
+adder' sum 0 = putStrLn ("The total is " ++ show sum)
+adder' sum todo = do
+  inputStr <- getLine
+  let input = read inputStr :: Int
+  adder' (sum + input) (todo - 1)
 
 -- Exercise 10.5 (***) (Optional)
 -- Redefine `adder` using the function `sequence :: [IO a] -> IO [a]` that performs a list of actions and returns a list of resulting values.
--- Use the name `adderUsingSequence` for your solution to avoid a name clash with the previous solution. 
+-- Use the name `adderUsingSequence` for your solution to avoid a name clash with the previous solution.
 -- Hint: The term `replicate n x` is a list containing `n` copies of a given element `x`. Use the function `replicate` to construct a term of type `[IO a]` from `getLine :: IO String`.
 
 -- >>> :t replicate
@@ -80,4 +94,3 @@ adder' = undefined
 
 adderUsingSequence :: IO ()
 adderUsingSequence = undefined
-
