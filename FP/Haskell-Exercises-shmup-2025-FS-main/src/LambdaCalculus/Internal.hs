@@ -40,7 +40,6 @@ The command `chcp 65001` sets the codepage to UTF-8. For more information: https
 
 -- This module requires an implementation of sets. By default, it uses the implementation provided in the module `LambdaCalculus.UnorderedSet`. But you could replace it with your own implementation in the module `BinarySearchTree` by modifying file `src/LambdaCalculus/Set.hs`.
 
-import Control.Arrow (ArrowChoice (left))
 import qualified LambdaCalculus.Set as Set
 import Prettyprinter
 import Test.QuickCheck
