@@ -1,34 +1,38 @@
 public class DinoMuseumVisitor implements MuseumVisitor {
 
-    //TODO define what happens when you visit and leave
-
     @Override
     public void visit(Museum museum) {
+        System.out.println("Entering " + museum.getName());
 
     }
 
     @Override
     public void visit(Area area) {
+        System.out.println("Entering " + area.getName());
 
     }
 
     @Override
     public void visit(Exhibit exhibit) {
+        System.out.println("Looking at " + exhibit.getExhibitName());
 
     }
 
     @Override
     public void leave(Museum museum) {
+        System.out.println("Leaving " + museum.getName());
 
     }
 
     @Override
     public void leave(Area area) {
+        System.out.println("Leaving " + area.getName());
 
     }
 
     @Override
     public void leave(Exhibit exhibit) {
+        System.out.println("Leaving " + exhibit.getExhibitName());
 
     }
 }

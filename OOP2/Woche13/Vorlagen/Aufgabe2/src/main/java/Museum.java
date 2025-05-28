@@ -16,6 +16,10 @@ public class Museum implements MuseumPart {
 
     @Override
     public void accept(MuseumVisitor visitor) {
-        //TODO
+        visitor.visit(this);
+        for(MuseumPart area: areas){
+            area.accept(visitor);
+        }
+        visitor.leave(this);
     }
 }

@@ -12,6 +12,7 @@ public class Exhibit implements MuseumPart {
 
     @Override
     public void accept(MuseumVisitor visitor) {
-        //TODO
+        visitor.visit(this);
+        visitor.leave(this);
     }
 }
