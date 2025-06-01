@@ -24,6 +24,7 @@ spec = do
   -- describe "Chapter_06"       Chapter_06_Spec.spec
   -- describe "Chapter_07"       Chapter_07_Spec.spec
   -- describe "Chapter_08"       Chapter_08_Spec.spec
-  -- describe "Chapter_12"       Chapter_12_Spec.spec
-  -- describe "BinarySearchTree.Internal" BinarySearchTree.Internal_Spec.spec
-  describe "LambdaCalculus.Internal" LambdaCalculus.Internal_Spec.spec
+  describe "Chapter_12" Chapter_12_Spec.spec
+
+-- describe "BinarySearchTree.Internal" BinarySearchTree.Internal_Spec.spec
+-- describe "LambdaCalculus.Internal" LambdaCalculus.Internal_Spec.spec

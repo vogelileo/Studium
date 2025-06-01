@@ -1,12 +1,13 @@
-{-# LANGUAGE InstanceSigs #-}
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE InstanceSigs #-}
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
+
 {-# HLINT ignore "Eta reduce" #-}
 
 module Chapter_12 where
 
-import Prelude hiding (Maybe, Nothing, Just)
 import GHC.Generics
+import Prelude hiding (Just, Maybe, Nothing)
 
 -- Exercise 12.WarmUp1
 -- Consider following type:
@@ -16,7 +17,7 @@ data Maybe a = Nothing | Just a
 
 -- Provide instance definitions to make this type into instances of the `Functor`, `Applicative` and `Monad` classes.
 
--- Here are some examples of how these instance definitions can be used: 
+-- Here are some examples of how these instance definitions can be used:
 
 -- >>> fmap (+1) Nothing
 -- Nothing
@@ -41,37 +42,38 @@ data Maybe a = Nothing | Just a
 -- >>> do {n <- pure 10; m <- pure 0; safediv n m}
 -- Nothing
 
-
-
 instance Functor Maybe where
   -- fmap :: ???
-  fmap = undefined
+  fmap f x = case x of
+    Nothing -> Nothing
+    Just a -> Just (f a)
+
 instance Applicative Maybe where
   -- pure :: ???
-  pure = undefined
+  pure :: a -> Maybe a
+  pure x = Just x
+
   -- (<*>) :: ???
-  (<*>) = undefined
+  (<*>) :: Maybe (a -> b) -> Maybe a -> Maybe b
+  (<*>) _ Nothing = Nothing
+  (<*>) Nothing _ = Nothing
+  (<*>) (Just f) (Just x) = Just (f x)
+
 instance Monad Maybe where
   -- (>>=) :: ???
-  (>>=) = undefined
-
-
-
-
+  (>>=) :: Maybe a -> (a -> Maybe b) -> Maybe b
+  (>>=) Nothing _ = Nothing
+  (>>=) (Just x) f = f x
 
 -- Exercise 12.1 (*)
 -- Define an instance of the `Functor` class for the following type of binary trees that have data in their nodes:
 
-data Tree a = Leaf | Node (Tree a) a (Tree a) 
-    deriving (Read, Show, Eq, Generic)
+data Tree a = Leaf | Node (Tree a) a (Tree a)
+  deriving (Read, Show, Eq, Generic)
 
 instance Functor Tree where
-    -- fmap :: ???
-    fmap = undefined
+  -- fmap :: ???
+  fmap _ Leaf = Leaf
+  fmap f (Node l x r) = Node (fmap f l) (f x) (fmap f r)
 
-
--- Note: Just in case you are wondering, this type of tree does not have an appropriate instance of the `Applicative` or `Monad` class. Take a look at https://dkalemis.wordpress.com/2014/03/22/trees-as-monads/ for an explanation. 
-    
-
-
-
+-- Note: Just in case you are wondering, this type of tree does not have an appropriate instance of the `Applicative` or `Monad` class. Take a look at https://dkalemis.wordpress.com/2014/03/22/trees-as-monads/ for an explanation.
