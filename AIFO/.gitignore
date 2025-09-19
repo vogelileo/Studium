@@ -1,0 +1,47 @@
+# -----------------------------
+# Python
+# -----------------------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# -----------------------------
+# Jupyter Notebook
+# -----------------------------
+.ipynb_checkpoints/
+
+# -----------------------------
+# Conda environment
+# Ignore local environment folder
+# -----------------------------
+env/
+*.conda
+*.env
+
+# -----------------------------
+# VSCode / IDE
+# -----------------------------
+.vscode/
+*.code-workspace
+
+# -----------------------------
+# OS / system files
+# -----------------------------
+.DS_Store
+Thumbs.db
+
+# -----------------------------
+# Data / large files
+# -----------------------------
+*.csv
+*.h5
+*.sqlite
+*.db
+*.zip
+*.tar
+*.gz
+*.mp4
+*.mov
+*.avi
+*.mkv
