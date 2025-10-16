@@ -1,0 +1,12 @@
+\babel@toc {english}{}\relax 
+\babel@toc {english}{}\relax 
+\babel@toc {ngerman}{}\relax 
+\contentsline {section}{\numberline {1}Einleitung}{6}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Motivation}{6}{subsection.1.1}%
+\contentsline {subsubsection}{\numberline {1.1.1}Hintergrund}{6}{subsubsection.1.1.1}%
+\contentsline {subsubsection}{\numberline {1.1.2}Hintergrund2}{6}{subsubsection.1.1.2}%
+\contentsline {section}{\numberline {2}Beispiel mit Bildern und Tabellen}{6}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Abbildung}{6}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Tabelle}{6}{subsection.2.2}%
+\contentsline {section}{\numberline {3}Fazit}{7}{section.3}%
+\contentsline {section}{\numberline {4}Quellenverzeichnis}{8}{section.4}%
