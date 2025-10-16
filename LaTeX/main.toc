@@ -1,12 +1,13 @@
 \babel@toc {english}{}\relax 
 \babel@toc {english}{}\relax 
 \babel@toc {ngerman}{}\relax 
-\contentsline {section}{\numberline {1}Einleitung}{6}{section.1}%
-\contentsline {subsection}{\numberline {1.1}Motivation}{6}{subsection.1.1}%
-\contentsline {subsubsection}{\numberline {1.1.1}Hintergrund}{6}{subsubsection.1.1.1}%
-\contentsline {subsubsection}{\numberline {1.1.2}Hintergrund2}{6}{subsubsection.1.1.2}%
-\contentsline {section}{\numberline {2}Beispiel mit Bildern und Tabellen}{6}{section.2}%
-\contentsline {subsection}{\numberline {2.1}Abbildung}{6}{subsection.2.1}%
-\contentsline {subsection}{\numberline {2.2}Tabelle}{6}{subsection.2.2}%
-\contentsline {section}{\numberline {3}Fazit}{7}{section.3}%
-\contentsline {section}{\numberline {4}Quellenverzeichnis}{8}{section.4}%
+\contentsline {chapter}{\numberline {1}Introduction}{4}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Einleitung}{4}{section.1.1}%
+\contentsline {subsection}{\numberline {1.1.1}Motivation}{4}{subsection.1.1.1}%
+\contentsline {subsubsection}{Hintergrund}{4}{subsection.1.1.1}%
+\contentsline {subsubsection}{Hintergrund2}{4}{subsection.1.1.1}%
+\contentsline {section}{\numberline {1.2}Beispiel mit Bildern und Tabellen}{4}{section.1.2}%
+\contentsline {subsection}{\numberline {1.2.1}Abbildung}{4}{subsection.1.2.1}%
+\contentsline {subsection}{\numberline {1.2.2}Tabelle}{4}{subsection.1.2.2}%
+\contentsline {section}{\numberline {1.3}Fazit}{5}{section.1.3}%
+\contentsline {section}{\numberline {1.4}Quellenverzeichnis}{6}{section.1.4}%
