@@ -1,9 +1,16 @@
+/**
+ * Parses JSON strings from markdown code blocks
+ * @param {string} jsonString - Raw markdown text containing JSON
+ * @returns {object} Parsed JSON object
+ * @throws {Error} If JSON parsing fails
+ */
 export const jsonMdParser = (jsonString) => {
   console.log('[jsonMdParser] Starting to parse');
 
+  // Clean markdown code block syntax from the JSON string
   jsonString = jsonString
-    .replace(/^```json\s*/i, '') // Remove starting fence (case-insensitive for 'json')
-    .replace(/\s*```\s*$/, '') // Remove ending fence
+    .replace(/^```json\s*/i, '')
+    .replace(/\s*```\s*$/, '')
     .trim();
 
   try {

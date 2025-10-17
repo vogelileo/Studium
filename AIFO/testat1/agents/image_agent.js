@@ -1,11 +1,15 @@
 import OpenAI from 'openai';
 import fs from 'fs';
-import { property, success } from 'zod';
 const openai = new OpenAI();
 
+/**
+ * Generates an image using OpenAI's image generation API
+ * @param {string} prompt - The text description to generate an image from
+ * @returns {object} Object containing success status and generated image path
+ */
 export async function generateImage(prompt) {
-  //Skip if image already exists
   let path = `images/${prompt}.png`;
+  // Return cached image if it exists to avoid redundant API calls
   if (fs.existsSync(path)) {
     console.log(
       `[generateImage] Image for prompt ${prompt} already exists at: ${path}`

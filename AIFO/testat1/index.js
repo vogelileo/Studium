@@ -1,4 +1,7 @@
-// index.js (Express server)
+/**
+ * Main Express server setup for the voice-enabled warehouse picking system.
+ * Handles API endpoints for workflow management and text-to-speech functionality.
+ */
 
 import express from 'express';
 import bodyParser from 'body-parser';
@@ -7,26 +10,26 @@ import 'dotenv/config';
 
 import { WorkflowManager } from './workflow_manager.js';
 import { Runner } from '@openai/agents';
+import generate from '@babel/generator';
+import { generateVoice } from './agents/voice_agent.js';
 
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-// A single real Runner instance for the entire application to reuse.
+// Shared Runner instance to handle all agent operations efficiently
 const sharedRunner = new Runner({
-  // Configure your trace metadata here if needed
   traceMetadata: { __trace_source__: 'voice-picker-server' },
 });
 
-// Global storage for the current workflow instance.
+// Maintains the active workflow state throughout the session
 let currentWorkflowManager = null;
 
-// --- API Endpoints ---
-
 /**
- * POST /api/start-workflow
- * Initializes a new picking workflow.
- * Expected body: { "input_as_text": "list of items to pick..." }
+ * API endpoint to initialize a new picking workflow.
+ * @route POST /api/start-workflow
+ * @param {object} req.body.input_as_text - JSON string containing the list of items to pick
+ * @returns {object} Initial workflow state
  */
 app.post('/api/start-workflow', async (req, res) => {
   try {
@@ -50,12 +53,10 @@ app.post('/api/start-workflow', async (req, res) => {
 });
 
 /**
- * POST /api/continue-workflow
- * Accepts the raw voice transcription and uses the Action Processor Agent
- * to translate it into a structured action for the WorkflowManager.
- * Expected body: { "user_input": "raw transcribed text, e.g., 'skip this one'" }
- * * NOTE: The body parameter name is changed from 'action' to 'user_input' to reflect
- * that it is raw text, not a pre-defined action code.
+ * API endpoint to process voice commands and advance the workflow.
+ * @route POST /api/continue-workflow
+ * @param {object} req.body.user_input - Raw transcribed voice command
+ * @returns {object} Updated workflow state after processing the command
  */
 app.post('/api/continue-workflow', async (req, res) => {
   if (!currentWorkflowManager) {
@@ -86,6 +87,20 @@ app.post('/api/continue-workflow', async (req, res) => {
   }
 });
 
+app.post('/api/generate-voice', async (req, res) => {
+  const { prompt } = req.body;
+  if (!prompt) {
+    return res.status(400).json({ error: 'Missing prompt in request body' });
+  }
+  let audioBuffer = await generateVoice(prompt);
+
+  res.setHeader('Content-Type', 'audio/mpeg');
+  res.setHeader('Content-Disposition', 'inline; filename="speec_output.mp3"');
+
+  // 5. Stream the Buffer to the client
+  res.send(audioBuffer);
+});
+
 // Export the app instance for supertest
 export default app;
 
@@ -95,22 +110,3 @@ const PORT = 3001;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
-
-// const input =
-//   '["[ { \\"name\\": \\"Item A\\", \\"hallway\\": \\"H1\\", \\"shelf\\": \\"S3\\" }, { \\"name\\": \\"Item B\\", \\"hallway\\": \\"H2\\", \\"shelf\\": \\"S1\\" }, { \\"name\\": \\"Item C\\", \\"hallway\\": \\"H1\\", \\"shelf\\": \\"S5\\" } ]"]';
-
-// let state = '';
-
-// currentWorkflowManager = new WorkflowManager(input, sharedRunner);
-
-// await currentWorkflowManager.start();
-
-// state = await currentWorkflowManager.continue('APPROVE');
-
-// while (state.status !== 'COMPLETED') {
-//   state = await currentWorkflowManager.continue('CONFIRM_PICK');
-
-//   console.log('Items left:', state.sorted_items.length);
-
-//   console.log('Current item:', state.currentItem);
-// }

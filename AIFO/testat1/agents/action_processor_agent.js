@@ -1,7 +1,9 @@
 import { Agent } from '@openai/agents';
 
-// --- 1. Define the Desired JSON Output Schema (Response Schema) ---
-// This schema enforces the exact structure and types the agent MUST output.
+/**
+ * Schema definition for standardizing voice command processing output.
+ * Enforces strict typing and validation for agent responses.
+ */
 const ProcessActionOutputSchema = {
   type: 'object',
   properties: {
@@ -66,18 +68,14 @@ const actionProcessorInstructions = (runContext, _agent) => {
 };
 
 /**
- * The configured Agent instance responsible for translating natural language
- * commands into standardized workflow actions via direct JSON output.
+ * OpenAI agent configuration for processing voice commands.
+ * Translates natural language into standardized workflow actions.
  */
 export const processActionAgent = new Agent({
   name: 'Action Processor Agent',
   instructions: actionProcessorInstructions,
-  model: 'gpt-4o', // Recommended model for reliable structured output
-
-  // Tools array is empty as requested
+  model: 'gpt-4o',
   tools: [],
-
-  // Key change: Use responseSchema to force structured output directly
   responseSchema: ProcessActionOutputSchema,
 
   modelSettings: {

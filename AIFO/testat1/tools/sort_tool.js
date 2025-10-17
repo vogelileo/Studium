@@ -2,6 +2,10 @@ import { tool } from '@openai/agents';
 
 // --- RAW JSON Schema ---
 // This is the working JSON object for the tool's parameters.
+/**
+ * JSON Schema for validating warehouse item sorting parameters
+ * @type {Object}
+ */
 const SortItemsRawJsonSchema = {
   type: 'object',
   properties: {
@@ -31,7 +35,10 @@ const SortItemsRawJsonSchema = {
 };
 
 /**
- * Defines the 'sort_items' tool for the Agent.
+ * Tool for sorting warehouse items by location
+ * Sorts items first by hallway and then by shelf number
+ * @param {Object} input - Input object containing items array
+ * @returns {string} Formatted string of sorted items
  */
 export const sortItemsTool = tool({
   name: 'sort_items',
@@ -40,17 +47,13 @@ export const sortItemsTool = tool({
   parameters: SortItemsRawJsonSchema,
 
   execute: async (input) => {
-    // The input is a plain JavaScript object
     const sorted_items = input.items.sort((a, b) => {
-      // Primary sort: Hallway
       if (a.hallway === b.hallway) {
-        // Secondary sort: Shelf
         return a.shelf.localeCompare(b.shelf);
       }
       return a.hallway.localeCompare(b.hallway);
     });
 
-    // Format the result as a string for the Agent to read
     const outputString = sorted_items
       .map(
         (item) =>
@@ -58,7 +61,6 @@ export const sortItemsTool = tool({
       )
       .join('\n');
 
-    // The tool returns a simple string message
     return `The sorted list is:\n${outputString}`;
   },
 });
