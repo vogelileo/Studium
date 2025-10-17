@@ -3,13 +3,13 @@ import fs from 'fs';
 const openai = new OpenAI();
 
 /**
- * Generates an image using OpenAI's image generation API
- * @param {string} prompt - The text description to generate an image from
- * @returns {object} Object containing success status and generated image path
+ * Generates an image using OpenAI's image generation API.
+ * @param {string} prompt - Text description used to generate the image.
+ * @returns {object} Object with success status and the generated image path.
  */
 export async function generateImage(prompt) {
   let path = `images/${prompt}.png`;
-  // Return cached image if it exists to avoid redundant API calls
+
   if (fs.existsSync(path)) {
     console.log(
       `[generateImage] Image for prompt ${prompt} already exists at: ${path}`
@@ -17,7 +17,7 @@ export async function generateImage(prompt) {
     return { success: true, path: path };
   }
 
-  console.log(`[generateImage] Generating image for prompt: "${prompt}"`);
+  console.log(`[generateImage] Generating image for prompt: \"${prompt}\"`);
   const result = await openai.images.generate({
     model: 'gpt-image-1',
     prompt,

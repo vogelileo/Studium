@@ -1,7 +1,5 @@
 import { tool } from '@openai/agents';
 
-// --- RAW JSON Schema ---
-// This is the working JSON object for the tool's parameters.
 /**
  * JSON Schema for validating warehouse item sorting parameters
  * @type {Object}

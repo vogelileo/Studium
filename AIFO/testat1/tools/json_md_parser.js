@@ -7,7 +7,6 @@
 export const jsonMdParser = (jsonString) => {
   console.log('[jsonMdParser] Starting to parse');
 
-  // Clean markdown code block syntax from the JSON string
   jsonString = jsonString
     .replace(/^```json\s*/i, '')
     .replace(/\s*```\s*$/, '')
