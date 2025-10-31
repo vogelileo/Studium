@@ -1,0 +1,26 @@
+@startuml
+title Scale System Architecture
+
+' --- Components ---
+class "Microprocessor\nControl Unit" as MCU {
+    +displayOn()
+    +displayOff()
+    +display(weight)
+    +getWeight()
+    +set(time)
+    +expired()
+}
+
+class "Display" as Display
+class "weight-sensor" as WeightSensor
+class "load-sensor" as LoadSensor
+class "hardware timer" as Timer
+
+' --- Relations ---
+MCU --> Display : displayOn()\ndisplayOff()\ndisplay(weight)
+MCU --> WeightSensor : getWeight()
+MCU --> Timer : set(time)
+Timer --> MCU : expired
+LoadSensor --> MCU : steppedOn()\nsteppedOff()
+
+@enduml

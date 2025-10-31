@@ -1,0 +1,20 @@
+@startuml state_machine
+
+[*] --> Idle
+Idle --> Active: steppedOn()
+Active --> Idle: steppedOff()
+
+state Active {
+     Active: entry / displayOn()
+    Active: entry / display(0)
+    Active: entry / set(3s)
+    Active: exit / displayOff()
+    [*] --> WaitingForSettlement
+    
+    WaitingForExpired: entry / display(getWeight())
+    WaitingForSettlement --> WaitingForExpired : expired / set(1s)
+    WaitingForExpired --> WaitingForExpired : expired / set(1s)
+}
+
+@enduml
+
