@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Schere Stein Papier</title>
+  <link rel="stylesheet" href="styles/global.css">
+  <script src="scripts/main.js" type="module"></script>
+</head>
+
+<body>
+
+  <div id="start-page">
+    <h1>Schere Stein Papier</h1>
+    <div><button>Wechsle zu Server</button></div>
+    <h2>Startseite</h2>
+    <h3>Rangliste</h3>
+    <div>
+      <p>1</p>
+      <p>8 Siege</p>
+      <p>Michael</p>
+    </div>
+    <h3>Neues Spiel</h3>
+    <div>
+      <label>Name</label>
+      <input id="name-input" type="text" placeholder="Dein Name">
+      <button id="start-game">Starte Spiel</button>
+    </div>
+  </div>
+  <div id="game-page" hidden>
+    <h2>Spielseite</h2>
+    <h3>Spielen</h3>
+    <p id="player-name-display">Spieler: Michael</p>
+    <p>Gegner: Computer</p>
+    <div>Schere</div>
+    <div>Stein</div>
+    <div>Papier</div>
+    <div>Brunnen</div>
+    <div>Streicholz</div>
+
+    <div>Gegner hat: Schere</div>
+    <button id=" back-to-start">Zurück zu Startseite</button>
+    <h3>Historie</h3>
+    <table>
+      <tr>
+        <th>Runde</th>
+        <th>Spieler</th>
+        <th>Gegner</th>
+        <th>Ergebnis</th>
+      </tr>
+      <tr>
+        <td>1</td>
+        <td>Stein</td>
+        <td>Schere</td>
+        <td>Sieg</td>
+      </tr>
+    </table>
+  </div>
+</body>
+
+</html>
